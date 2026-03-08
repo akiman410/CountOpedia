@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import attackImg from "./images/attack.png";
 import defenseImg from "./images/defend.png";
 
@@ -7,27 +7,34 @@ function Counter() {
   const [gameStatus, setGameStatus] = useState("");
 
   function handleIncrement() {
-    setCount(function (prev) {
-      const newValue = prev + 1;
-      if (count >= 5) {
-        setGameStatus("You Won!");
-      } else {
-        setGameStatus(" ");
-      }
-      return newValue;
-    });
+    const newValue = count + 1;
+    setCount(newValue);
+    // if (count >= 5) {
+    //   setGameStatus("You Won!");
+    // } else {
+    //   setGameStatus(" ");
+    // }
   }
   function handleDecrement() {
-    setCount((prev) => {
-      const newValue = prev - 1;
-      if (count <= -5) {
-        setGameStatus("You Lost!");
-      } else {
-        setGameStatus(" ");
-      }
-      return newValue;
-    });
+    const newValue = count - 1;
+    setCount(newValue);
+    // if (count <= -5) {
+    //   setGameStatus("You Lost!");
+    // } else {
+    //   setGameStatus(" ");
+    // }
   }
+  useEffect(() => {
+    if (count <= -5) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setGameStatus("You Lost!");
+    } else if (count >= 5) {
+      setGameStatus("You Won!");
+    } else {
+      setGameStatus("");
+    }
+  }, [count]);
+
   function handleRandomPlay() {
     const playMode = Math.round(Math.random());
     if (playMode == 0) {
@@ -38,7 +45,7 @@ function Counter() {
   }
   function handleReset() {
     setCount(0);
-    setGameStatus(" ");
+    setGameStatus("");
   }
   function handleLog() {
     console.log(count);
@@ -49,8 +56,8 @@ function Counter() {
       <div className="row text-white text-center">
         <h1>Game Score : {count}</h1>
         <p>You win at +5 points and lose at -5 points</p>
+        {gameStatus.length > 0 && <h3>Game Status :{gameStatus} </h3>}
 
-        <h3>Game Status :{gameStatus} </h3>
         <div className="col-6 col-md-3 offset-md-3">
           <img
             src={attackImg}
